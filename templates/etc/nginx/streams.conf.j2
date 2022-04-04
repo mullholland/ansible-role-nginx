@@ -1,0 +1,29 @@
+# {{ ansible_managed }}
+
+{% if nginx_streams | length > 0 or nginx_upstreams | length > 0  %}
+stream {
+
+{% for stream in nginx_streams %}
+    server {
+        listen {{ stream.listen }};
+        proxy_pass {{ stream.proxy_pass }};
+{% if stream.extra_parameters is defined %}
+        {{ stream.extra_parameters|indent(4) }}
+{% endif %}
+    }
+{% endfor %}
+
+{% for upstream in nginx_upstreams %}
+    upstream {{ upstream.name }} {
+{% if upstream.strategy is defined %}
+        {{ upstream.strategy }};
+{% endif %}
+{% for server in upstream.servers %}
+        server {{ server }};
+{% endfor %}
+
+    }
+{% endfor %}
+
+}
+{% endif %}

@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+{% if nginx_repo_version == "mainline" %}
+deb [ arch=amd64 ]  http://nginx.org/packages/{{ nginx_repo_version }}/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx
+deb-src [ arch=amd64 ]  http://nginx.org/packages/{{ nginx_repo_version }}/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx
+{% elif nginx_repo_version == "stable" %}
+deb [ arch=amd64 ]  http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx
+deb-src [ arch=amd64 ]  http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx
+{% endif %}
+
+

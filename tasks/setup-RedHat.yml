@@ -1,0 +1,20 @@
+---
+- name: RedHat/CentOS | add nginx nginx signing key
+  ansible.builtin.rpm_key:
+    state: present
+    key: "{{ nginx_signing_key }}"
+
+- name: RedHat/CentOS | Enable nginx repository
+  ansible.builtin.template:
+    src: "repositories/RedHat.j2"
+    dest: "/etc/yum.repos.d/nginx.repo"
+    owner: root
+    group: root
+    mode: "0644"
+  register: nginx_repository_update
+
+- name: RedHat/CentOS | Ensure nginx is installed
+  ansible.builtin.yum:
+    name: "{{ nginx_package_name }}"
+    update_cache: "{{ 'true' if nginx_repository_update.changed else 'false' }}"
+    state: present
