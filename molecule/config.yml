@@ -1,4 +1,7 @@
 ---
+molecule_exceptions:
+  - variation: centos-stream9
+    reason: "No supported Repository ATM"
 molecule_scenarios:
   - scenario: "default"
     ansible: ["previous", "current", "next"]
@@ -10,7 +13,6 @@ molecule_scenarios:
       - "ubuntu2004"
       - "centos7"
       - "centos-stream8"
-      - "centos-stream9"
       - "ubi8"
       - "amazonlinux"
       - "rockylinux8"
