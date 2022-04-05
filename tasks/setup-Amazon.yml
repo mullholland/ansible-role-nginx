@@ -1,20 +1,20 @@
 ---
 - name: Amazon | Add nginx nginx signing key
-  ansible.builtin.apt_key:
-    url: "{{ nginx_signing_key }}"
+  ansible.builtin.rpm_key:
     state: present
+    key: "{{ nginx_signing_key }}"
 
 - name: Amazon | Enable nginx repository
   ansible.builtin.template:
     src: "repositories/Amazon.j2"
-    dest: "/etc/apt/sources.list.d/nginx.list"
+    dest: "/etc/yum.repos.d/nginx.repo"
     owner: root
     group: root
     mode: "0644"
   register: nginx_repository_update
 
 - name: Amazon | Ensure nginx is installed
-  ansible.builtin.apt:
+  ansible.builtin.yum:
     name: "{{ nginx_package_name }}"
-    state: present
     update_cache: "{{ 'true' if nginx_repository_update.changed else 'false' }}"
+    state: present
