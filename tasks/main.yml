@@ -13,7 +13,7 @@
   when: nginx_user is not defined
 
 - name: Include Setup Tasks
-  include_tasks: "{{ item }}.yml"
+  include_tasks: "{{ item }}"
   with_first_found:
     - 'setup-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml'
     - 'setup-{{ ansible_distribution }}.yml'
