@@ -4,7 +4,7 @@ molecule_exceptions:
     reason: "No supported Repository ATM"
 molecule_scenarios:
   - scenario: "default"
-    ansible: ["previous", "current", "next"]
+    ansible: ["previous", "current", "development"]
     platforms:
       - "debian9"
       - "debian10"
