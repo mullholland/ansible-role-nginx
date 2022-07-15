@@ -9,6 +9,7 @@ stages:
   - "default-previous"
   - "default-current"
 
+
 variables:
   DOCKER_HOST: "tcp://docker:2375"
   PY_COLORS: 1
@@ -51,3 +52,4 @@ linting:
       - PLATFORM: [debian9, debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, ubi8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
   script:
     - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
+
