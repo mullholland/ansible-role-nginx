@@ -1,5 +1,10 @@
 # [nginx](#nginx)
 
+**IMPORTANT**
+This role will no longer be updated. you can use [robertdebock/ansible-role-nginx](https://github.com/robertdebock/ansible-role-nginx) as an alternative.
+
+---
+
 |GitHub|GitLab|
 |------|------|
 |[![github](https://github.com/mullholland/ansible-role-nginx/workflows/Ansible%20Molecule/badge.svg)](https://github.com/mullholland/ansible-role-nginx/actions)|[![gitlab](https://gitlab.com/mullholland/ansible-role-nginx/badges/main/pipeline.svg)](https://gitlab.com/mullholland/ansible-role-nginx)|
