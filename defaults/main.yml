@@ -42,8 +42,6 @@ nginx_client_max_body_size: "64m"
 
 nginx_server_names_hash_bucket_size: "64"
 
-nginx_proxy_cache_path: ""
-
 # set custom log_format
 nginx_custom_log_formats: []
 # nginx_custom_log_formats:

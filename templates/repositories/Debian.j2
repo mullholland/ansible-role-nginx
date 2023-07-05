@@ -6,5 +6,3 @@ deb-src [ arch=amd64 ]  http://nginx.org/packages/{{ nginx_repo_version }}/{{ an
 deb [ arch=amd64 ]  http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx
 deb-src [ arch=amd64 ]  http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx
 {% endif %}
-
-
