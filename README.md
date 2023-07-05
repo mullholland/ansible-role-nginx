@@ -1,19 +1,104 @@
 # [nginx](#nginx)
 
-**IMPORTANT**
-This role will no longer be updated. you can use [robertdebock/ansible-role-nginx](https://github.com/robertdebock/ansible-role-nginx) as an alternative.
+installs and configures nginx
 
+|GitHub|GitLab|Quality|Downloads|Version|
+|------|------|-------|---------|-------|
+|[![github](https://github.com/mullholland/ansible-role-nginx/workflows/Ansible%20Molecule/badge.svg)](https://github.com/mullholland/ansible-role-nginx/actions)|[![gitlab](https://gitlab.com/opensourceunicorn/ansible-role-nginx/badges/master/pipeline.svg)](https://gitlab.com/opensourceunicorn/ansible-role-nginx)|[![quality](https://img.shields.io/ansible/quality/58676)](https://galaxy.ansible.com/mullholland/nginx)|[![downloads](https://img.shields.io/ansible/role/d/58676)](https://galaxy.ansible.com/mullholland/nginx)|[![Version](https://img.shields.io/github/release/mullholland/ansible-role-nginx.svg)](https://github.com/mullholland/ansible-role-nginx/releases/)|
+
+## [Example Playbook](#example-playbook)
+
+This example is taken from [`molecule/default/converge.yml`](https://github.com/mullholland/ansible-role-nginx/blob/master/molecule/default/converge.yml) and is tested on each push, pull request and release.
+
+```yaml
 ---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    nginx_repo_version: "mainline"
+    nginx_custom_log_formats:
+      - name: "kv"
+        format: |-
+          'site="$server_name" server="$host" dest_port="$server_port" dest_ip="$server_addr" '
+          'src="$remote_addr" src_ip="$realip_remote_addr" user="$remote_user" '
+          'time_local="$time_local" protocol="$server_protocol" status="$status" '
+          'bytes_out="$bytes_sent" bytes_in="$upstream_bytes_received" '
+          'http_referer="$http_referer" http_user_agent="$http_user_agent" '
+          'nginx_version="$nginx_version" http_x_forwarded_for="$http_x_forwarded_for" '
+          'http_x_header="$http_x_header" uri_query="$query_string" uri_path="$uri" '
+          'http_method="$request_method" response_time="$upstream_response_time" '
+          'cookie="$http_cookie" request_time="$request_time" category="$sent_http_content_type" https="$https"'
 
-|GitHub|GitLab|
-|------|------|
-|[![github](https://github.com/mullholland/ansible-role-nginx/workflows/Ansible%20Molecule/badge.svg)](https://github.com/mullholland/ansible-role-nginx/actions)|[![gitlab](https://gitlab.com/mullholland/ansible-role-nginx/badges/main/pipeline.svg)](https://gitlab.com/mullholland/ansible-role-nginx)|
+    nginx_vhosts:
+      - listen: "80 default_server"
+        server_name: "_"
+        extra_parameters: |
+          return 301 https://$host$request_uri;
 
-description
+    nginx_streams:
+      - listen: "66 udp"
+        proxy_pass: dns_servers
+        extra_parameters: |
+          proxy_responses 0;
+    nginx_upstreams:
+      - name: dns_servers
+        servers:
+          - "192.168.136.130:53"
+          - "192.168.136.131:53 weight=3"
+      - name: myapp
+        strategy: "hash $remote_addr consistent"
+        servers:
+          - "192.168.136.11:8080"
+          - "192.168.136.12:8080"
+          - "192.168.136.13:8080"
+
+
+  roles:
+    - role: "mullholland.nginx"
+
+    # nginx_stream_server:
+    #   - listen: "53 udp"
+    #     proxy_pass: "dns_servers"
+    # nginx_stream_upstreams:
+    #   - name: "dns_servers"
+    #     strategy: "hash"
+    #     servers:
+    #      - "192.168.136.130:53"
+    #      - "192.168.136.131:53"
+
+    # nginx_http_upstreams:
+    #   - name: myapp
+    #     strategy: "hash"
+    #     servers:
+    #       - "192.168.136.11:8080"
+    #       - "192.168.136.12:8080"
+    #       - "192.168.136.13:8080"
+```
+
+The machine needs to be prepared. In CI this is done using [`molecule/default/prepare.yml`](https://github.com/mullholland/ansible-role-nginx/blob/master/molecule/default/prepare.yml):
+
+```yaml
+---
+- name: Prepare
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+      when:
+        - ansible_os_family == "Debian"
+```
+
 
 ## [Role Variables](#role-variables)
 
-These variables are set in `defaults/main.yml`:
+The default values for the variables are set in [`defaults/main.yml`](https://github.com/mullholland/ansible-role-nginx/blob/master/defaults/main.yml):
+
 ```yaml
 ---
 # ---------------------------------------------------------------------------
@@ -227,141 +312,43 @@ nginx_streams: []
 #       proxy_responses 0;
 ```
 
+## [Requirements](#requirements)
 
-## [Example Playbook](#example-playbook)
-
-This example is taken from `molecule/default/converge.yml` and is tested on each push, pull request and release.
-```yaml
----
-- name: Converge
-  hosts: all
-  become: true
-  gather_facts: true
-  vars:
-    nginx_repo_version: "mainline"
-    nginx_custom_log_formats:
-      - name: "kv"
-        format: |-
-          'site="$server_name" server="$host" dest_port="$server_port" dest_ip="$server_addr" '
-          'src="$remote_addr" src_ip="$realip_remote_addr" user="$remote_user" '
-          'time_local="$time_local" protocol="$server_protocol" status="$status" '
-          'bytes_out="$bytes_sent" bytes_in="$upstream_bytes_received" '
-          'http_referer="$http_referer" http_user_agent="$http_user_agent" '
-          'nginx_version="$nginx_version" http_x_forwarded_for="$http_x_forwarded_for" '
-          'http_x_header="$http_x_header" uri_query="$query_string" uri_path="$uri" '
-          'http_method="$request_method" response_time="$upstream_response_time" '
-          'cookie="$http_cookie" request_time="$request_time" category="$sent_http_content_type" https="$https"'
-
-    nginx_vhosts:
-      - listen: "80 default_server"
-        server_name: "_"
-        extra_parameters: |
-          return 301 https://$host$request_uri;
-
-    nginx_streams:
-      - listen: "66 udp"
-        proxy_pass: dns_servers
-        extra_parameters: |
-          proxy_responses 0;
-    nginx_upstreams:
-      - name: dns_servers
-        servers:
-          - "192.168.136.130:53"
-          - "192.168.136.131:53 weight=3"
-      - name: myapp
-        strategy: "hash $remote_addr consistent"
-        servers:
-          - "192.168.136.11:8080"
-          - "192.168.136.12:8080"
-          - "192.168.136.13:8080"
+- pip packages listed in [requirements.txt](https://github.com/mullholland/ansible-role-nginx/blob/master/requirements.txt).
 
 
-  roles:
-    - role: "mullholland.nginx"
+## [Context](#context)
 
-    # nginx_stream_server:
-    #   - listen: "53 udp"
-    #     proxy_pass: "dns_servers"
-    # nginx_stream_upstreams:
-    #   - name: "dns_servers"
-    #     strategy: "hash"
-    #     servers:
-    #      - "192.168.136.130:53"
-    #      - "192.168.136.131:53"
+This role is a part of many compatible roles. Have a look at [the documentation of these roles](https://mullholland.net) for further information.
 
-    # nginx_http_upstreams:
-    #   - name: myapp
-    #     strategy: "hash"
-    #     servers:
-    #       - "192.168.136.11:8080"
-    #       - "192.168.136.12:8080"
-    #       - "192.168.136.13:8080"
-```
-
-The machine needs to be prepared in CI this is done using `molecule/default/prepare.yml`:
-```yaml
----
-- name: Prepare
-  hosts: all
-  become: true
-  gather_facts: true
-
-  tasks:
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: true
-      when:
-        - ansible_os_family == "Debian"
-```
-
-
-
-
+Here is an overview of related roles:
+![dependencies](https://raw.githubusercontent.com/mullholland/ansible-role-nginx/png/requirements.png "Dependencies")
 
 ## [Compatibility](#compatibility)
 
 This role has been tested on these [container images](https://hub.docker.com/u/mullholland):
 
--   [debian9](https://hub.docker.com/r/mullholland/docker-molecule-debian9)
--   [debian10](https://hub.docker.com/r/mullholland/docker-molecule-debian10)
--   [debian11](https://hub.docker.com/r/mullholland/docker-molecule-debian11)
--   [ubuntu1804](https://hub.docker.com/r/mullholland/docker-molecule-ubuntu1804)
--   [ubuntu2004](https://hub.docker.com/r/mullholland/docker-molecule-ubuntu2004)
--   [ubuntu2204](https://hub.docker.com/r/mullholland/docker-molecule-ubuntu2204)
--   [centos7](https://hub.docker.com/r/mullholland/docker-molecule-centos7)
--   [centos-stream8](https://hub.docker.com/r/mullholland/docker-molecule-centos-stream8)
--   [ubi8](https://hub.docker.com/r/mullholland/docker-molecule-ubi8)
--   [amazonlinux](https://hub.docker.com/r/mullholland/docker-molecule-amazonlinux)
--   [rockylinux8](https://hub.docker.com/r/mullholland/docker-molecule-rockylinux8)
--   [almalinux8](https://hub.docker.com/r/mullholland/docker-molecule-almalinux8)
+|container|tags|
+|---------|----|
+|[EL](https://hub.docker.com/repository/docker/mullholland/docker-centos-systemd/general)|all|
+|[Amazon](https://hub.docker.com/repository/docker/mullholland/docker-amazonlinux-systemd/general)|Candidate|
+|[Ubuntu](https://hub.docker.com/repository/docker/mullholland/docker-ubuntu-systemd/general)|all|
+|[Debian](https://hub.docker.com/repository/docker/mullholland/docker-debian-systemd/general)|all|
 
 The minimum version of Ansible required is 2.10, tests have been done to:
 
--   The previous versions.
--   The current version.
-
-
-
-## [Exceptions](#exceptions)
-
-Some variations of the build matrix do not work. These are the variations and reasons why the build won't work:
-
-| variation                 | reason                 |
-|---------------------------|------------------------|
-| centos-stream9 | No supported Repository ATM |
-
+- The previous version.
+- The current version.
+- The development version.
 
 If you find issues, please register them in [GitHub](https://github.com/mullholland/ansible-role-nginx/issues)
 
 ## [License](#license)
 
-MIT
-
+[MIT](https://github.com/mullholland/ansible-role-nginx/blob/master/LICENSE).
 
 ## [Author Information](#author-information)
 
-[Mullholland](https://github.com/mullholland)
+[Mullholland](https://mullholland.net)
 
-## [Special Thanks](#special-thanks)
-
-Template inspired by [Robert de Bock](https://github.com/robertdebock)
+Please consider [sponsoring me](https://github.com/sponsors/mullholland).
