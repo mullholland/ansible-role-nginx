@@ -1,11 +1,10 @@
-# [nginx](#nginx)
+# [Ansible role nginx](#nginx)
 
 installs and configures nginx
 
-|GitHub|GitLab|Quality|Downloads|Version|
-|------|------|-------|---------|-------|
-|[![github](https://github.com/mullholland/ansible-role-nginx/workflows/Ansible%20Molecule/badge.svg)](https://github.com/mullholland/ansible-role-nginx/actions)|[![gitlab](https://gitlab.com/opensourceunicorn/ansible-role-nginx/badges/master/pipeline.svg)](https://gitlab.com/opensourceunicorn/ansible-role-nginx)|[![quality](https://img.shields.io/ansible/quality/58676)](https://galaxy.ansible.com/mullholland/nginx)|[![downloads](https://img.shields.io/ansible/role/d/58676)](https://galaxy.ansible.com/mullholland/nginx)|[![Version](https://img.shields.io/github/release/mullholland/ansible-role-nginx.svg)](https://github.com/mullholland/ansible-role-nginx/releases/)|
-
+|GitHub|Downloads|Version|
+|------|---------|-------|
+|[![github](https://github.com/mullholland/ansible-role-nginx/actions/workflows/molecule.yml/badge.svg)](https://github.com/mullholland/ansible-role-nginx/actions/workflows/molecule.yml)|[![downloads](https://img.shields.io/ansible/role/d/mullholland/nginx)](https://galaxy.ansible.com/mullholland/nginx)|[![Version](https://img.shields.io/github/release/mullholland/ansible-role-nginx.svg)](https://github.com/mullholland/ansible-role-nginx/releases/)|
 ## [Example Playbook](#example-playbook)
 
 This example is taken from [`molecule/default/converge.yml`](https://github.com/mullholland/ansible-role-nginx/blob/master/molecule/default/converge.yml) and is tested on each push, pull request and release.
@@ -95,6 +94,7 @@ The machine needs to be prepared. In CI this is done using [`molecule/default/pr
 ```
 
 
+
 ## [Role Variables](#role-variables)
 
 The default values for the variables are set in [`defaults/main.yml`](https://github.com/mullholland/ansible-role-nginx/blob/master/defaults/main.yml):
@@ -143,8 +143,6 @@ nginx_keepalive_requests: "100"
 nginx_client_max_body_size: "64m"
 
 nginx_server_names_hash_bucket_size: "64"
-
-nginx_proxy_cache_path: ""
 
 # set custom log_format
 nginx_custom_log_formats: []
@@ -330,10 +328,10 @@ This role has been tested on these [container images](https://hub.docker.com/u/m
 
 |container|tags|
 |---------|----|
-|[EL](https://hub.docker.com/repository/docker/mullholland/docker-centos-systemd/general)|all|
-|[Amazon](https://hub.docker.com/repository/docker/mullholland/docker-amazonlinux-systemd/general)|Candidate|
-|[Ubuntu](https://hub.docker.com/repository/docker/mullholland/docker-ubuntu-systemd/general)|all|
-|[Debian](https://hub.docker.com/repository/docker/mullholland/docker-debian-systemd/general)|all|
+|[EL](https://hub.docker.com/r/mullholland/enterpriselinux)|all|
+|[Amazon](https://hub.docker.com/r/mullholland/amazonlinux)|Candidate|
+|[Ubuntu](https://hub.docker.com/r/mullholland/ubuntu)|all|
+|[Debian](https://hub.docker.com/r/mullholland/debian)|all|
 
 The minimum version of Ansible required is 2.10, tests have been done to:
 
@@ -341,7 +339,7 @@ The minimum version of Ansible required is 2.10, tests have been done to:
 - The current version.
 - The development version.
 
-If you find issues, please register them in [GitHub](https://github.com/mullholland/ansible-role-nginx/issues)
+If you find issues, please register them in [GitHub](https://github.com/mullholland/ansible-role-nginx/issues).
 
 ## [License](#license)
 
@@ -350,5 +348,3 @@ If you find issues, please register them in [GitHub](https://github.com/mullholl
 ## [Author Information](#author-information)
 
 [Mullholland](https://mullholland.net)
-
-Please consider [sponsoring me](https://github.com/sponsors/mullholland).
