@@ -19,6 +19,19 @@
     - 'setup-{{ ansible_distribution }}.yml'
     - 'setup-{{ ansible_os_family }}.yml'
 
+- name: Check nginx build configuration
+  ansible.builtin.command: nginx -V
+  register: nginx_version_output
+  changed_when: false
+
+# nginx.org's official packages compile the stream module as dynamic on
+# some distros (e.g. Amazon Linux, Ubuntu) and static on others, so
+# "stream {}" in nginx.conf needs an explicit load_module only on the
+# former - otherwise nginx fails with "unknown directive stream".
+- name: Set fact for dynamic stream module
+  ansible.builtin.set_fact:
+    nginx_stream_module_dynamic: "{{ 'with-stream=dynamic' in nginx_version_output.stderr }}"
+
 - name: Create /etc/nginx/nginx.conf
   ansible.builtin.template:
     src: "etc/nginx/nginx.conf.j2"

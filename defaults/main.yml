@@ -17,6 +17,7 @@
 # branch at all times.
 nginx_repo_version: "mainline"
 nginx_signing_key: "https://nginx.org/keys/nginx_signing.key"
+nginx_signing_keyring: "/etc/apt/keyrings/nginx.asc"
 
 # The name of the nginx apt/yum package to install.
 nginx_package_name: "nginx"
