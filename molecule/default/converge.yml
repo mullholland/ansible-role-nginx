@@ -27,8 +27,8 @@
     # statically on EL; on Debian/Ubuntu/Amazon it's built as a dynamic
     # module but the .so is never actually published, so "stream {}"
     # can't work there at all. Only exercise it where it can succeed.
-    nginx_streams: "{{ [{'listen': '66 udp', 'proxy_pass': 'dns_servers', 'extra_parameters': 'proxy_responses 0;\n'}] if ansible_os_family == 'RedHat' else [] }}"
-    nginx_upstreams: "{{ [{'name': 'dns_servers', 'servers': ['192.168.136.130:53', '192.168.136.131:53 weight=3']}, {'name': 'myapp', 'strategy': 'hash $remote_addr consistent', 'servers': ['192.168.136.11:8080', '192.168.136.12:8080', '192.168.136.13:8080']}] if ansible_os_family == 'RedHat' else [] }}"
+    nginx_streams: "{{ [{'listen': '66 udp', 'proxy_pass': 'dns_servers', 'extra_parameters': 'proxy_responses 0;\n'}] if (ansible_os_family == 'RedHat' and ansible_distribution != 'Amazon') else [] }}"
+    nginx_upstreams: "{{ [{'name': 'dns_servers', 'servers': ['192.168.136.130:53', '192.168.136.131:53 weight=3']}, {'name': 'myapp', 'strategy': 'hash $remote_addr consistent', 'servers': ['192.168.136.11:8080', '192.168.136.12:8080', '192.168.136.13:8080']}] if (ansible_os_family == 'RedHat' and ansible_distribution != 'Amazon') else [] }}"
 
 
   roles:
