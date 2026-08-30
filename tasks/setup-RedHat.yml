@@ -1,5 +1,5 @@
 ---
-- name: setup-RedHat | add nginx nginx signing key
+- name: setup-RedHat | Add nginx nginx signing key
   ansible.builtin.rpm_key:
     state: present
     key: "{{ nginx_signing_key }}"
@@ -14,7 +14,7 @@
   register: nginx_repository_update
 
 - name: setup-RedHat | Ensure nginx is installed
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: "{{ nginx_package_name }}"
     update_cache: "{{ 'true' if nginx_repository_update.changed else 'false' }}"
     state: present

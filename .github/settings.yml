@@ -5,4 +5,4 @@
 repository:
   description: installs and configures nginx
   homepage: https://mullholland.net
-  topics: cloud, development, system, web, ansible, molecule, tox, playbook
+  topics: cloud, development, system, web, ansible, molecule, playbook

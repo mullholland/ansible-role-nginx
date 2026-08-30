@@ -1,7 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  become: true
   gather_facts: true
   vars:
     nginx_repo_version: "mainline"
@@ -43,7 +42,7 @@
 
 
   roles:
-    - role: "ansible-role-nginx"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
 
     # nginx_stream_server:
     #   - listen: "53 udp"
