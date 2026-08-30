@@ -1,7 +1,6 @@
 ---
 - name: Verify
   hosts: all
-  become: true
   gather_facts: true
 
   tasks:
@@ -62,6 +61,7 @@
       check_mode: true
       register: streams_conf
       failed_when: (streams_conf is changed) or (streams_conf is failed)
+      when: ansible_os_family == "RedHat" and ansible_distribution != "Amazon"
 
     - name: Test if nginx is installed
       ansible.builtin.package:

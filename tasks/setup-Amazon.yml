@@ -14,7 +14,7 @@
   register: nginx_repository_update
 
 - name: setup-Amazon | Ensure nginx is installed
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: "{{ nginx_package_name }}"
     update_cache: "{{ 'true' if nginx_repository_update.changed else 'false' }}"
     state: present

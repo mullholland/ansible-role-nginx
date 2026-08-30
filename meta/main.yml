@@ -12,9 +12,15 @@ galaxy_info:
     - name: EL
       versions:
         - all
+    - name: Rocky
+      versions:
+        - all
+    - name: AlmaLinux
+      versions:
+        - all
     - name: Amazon
       versions:
-        - Candidate
+        - all
     - name: Ubuntu
       versions:
         - all

@@ -1,8 +1,18 @@
 ---
+- name: setup-Debian | Ensure keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
 - name: setup-Debian | Add nginx nginx signing key
-  ansible.builtin.apt_key:
+  ansible.builtin.get_url:
     url: "{{ nginx_signing_key }}"
-    state: present
+    dest: "{{ nginx_signing_keyring }}"
+    mode: "0644"
+    force: false
 
 - name: setup-Debian | Enable nginx repository
   ansible.builtin.template:
